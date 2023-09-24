@@ -1,0 +1,16 @@
+{
+  "name": "part8",
+  "version": "1.0.0",
+  "description": "Full Stack Open Part 8",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.9.3",
+    "graphql": "^16.8.1",
+    "uuid": "^9.0.1"
+  }
+}

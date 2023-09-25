@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
+import { ALL_AUTHORS, ALL_BOOKS } from '../queries'
 
 const CREATE_BOOK = gql`
 mutation createBook($title: String!, $published: Int, $author: String!, $genres: [String!]) {
@@ -23,7 +24,9 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
-  const [ createBook ] = useMutation(CREATE_BOOK)
+  const [ createBook ] = useMutation(CREATE_BOOK, {
+    refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ]
+  })
 
   if (!props.show) {
     return null
@@ -35,37 +38,6 @@ const NewBook = (props) => {
 
     // Update the server
     createBook({  variables: { title, published: Number(published), author, genres } })
-
-    // Update the books state
-    const newBook = {
-      title: title,
-      published: published,
-      author: author,
-      genres: genres
-    }
-    props.setBooks([...props.books, newBook])
-
-    // Update the authors state
-    const newAuthor = {
-      name: author,
-      bookCount: 1
-    }
-    if (!props.authors.some(a => a.name === newAuthor.name)) {
-      props.setAuthors([...props.authors, newAuthor])
-    }
-    else {
-      // If the author exists, update bookCount for existing user
-      const updatedAuthors = props.authors.map(a => {
-        if (a.name === newAuthor.name) {
-          return {
-            ...a,
-            bookCount: a.bookCount + 1
-          }
-        }
-      return a
-      })
-      props.setAuthors(updatedAuthors)
-    }
     
     setTitle('')
     setPublished('')

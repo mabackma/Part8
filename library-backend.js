@@ -129,7 +129,7 @@ const typeDefs = `
       id: ID
       genres: [String!]
     ): Book
-    editAuthor (
+    editAuthor(
       name: String!
       setBornTo: Int!
     ): Author

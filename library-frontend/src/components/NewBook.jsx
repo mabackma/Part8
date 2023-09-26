@@ -4,12 +4,7 @@ import { ALL_AUTHORS, ALL_BOOKS } from '../queries'
 
 const CREATE_BOOK = gql`
 mutation createBook($title: String!, $published: Int, $author: String!, $genres: [String!]) {
-  addBook(
-    title: $title,
-    published: $published,
-    author: $author,
-    genres: $genres
-  ) {
+  addBook(title: $title, published: $published, author: $author, genres: $genres ) {
     title
     published
     author
@@ -41,7 +36,12 @@ const NewBook = (props) => {
     console.log('add book...')
 
     // Update the server
-    createBook({  variables: { title, published: Number(published), author, genres } })
+    if(published) {
+      createBook({  variables: { title, published: Number(published), author, genres } })
+    }
+    else {
+      createBook({  variables: { title, published: null, author, genres } })
+    }
     
     setTitle('')
     setPublished('')

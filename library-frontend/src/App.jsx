@@ -37,7 +37,7 @@ const App = () => {
         <button onClick={() => setPage('add')}>add book</button>
       </div>
       <Notify errorMessage={errorMessage} />
-      <Authors show={page === 'authors'} authors={authors}/>
+      <Authors show={page === 'authors'} authors={authors} setError={notify}/>
       <Books show={page === 'books'} books={books}/>
       <NewBook show={page === 'add'} setError={notify}/>
     </div>

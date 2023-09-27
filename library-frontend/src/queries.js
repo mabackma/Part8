@@ -15,7 +15,12 @@ query {
   allBooks {
     title
     published
-    author
+    author {
+      name
+      id
+      born
+      bookCount
+    }
     id
     genres
   }

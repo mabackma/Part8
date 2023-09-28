@@ -3,13 +3,15 @@ import { gql, useMutation } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS } from '../queries'
 
 const CREATE_BOOK = gql`
-mutation createBook($title: String!, $published: Int, $author: String!, $genres: [String!]) {
-  addBook(title: $title, published: $published, author: $author, genres: $genres ) {
+mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
+  addBook(title: $title, author: $author, published: $published, genres: $genres ) {
     title
+    author {
+      name
+    }
     published
-    author
     genres
-  }
+  } 
 }
 `
 
@@ -37,10 +39,10 @@ const NewBook = (props) => {
 
     // Update the server
     if(published) {
-      createBook({  variables: { title, published: Number(published), author, genres } })
+      createBook({  variables: { title, author, published: Number(published), genres } })
     }
     else {
-      createBook({  variables: { title, published: null, author, genres } })
+      createBook({  variables: { title, author, published: null, genres } })
     }
     
     setTitle('')

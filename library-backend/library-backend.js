@@ -1,4 +1,4 @@
-const { ApolloServer } = require('@apollo/server')
+const { ApolloServer, gql, GraphQLError } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v4: uuid } = require('uuid')
 
@@ -21,8 +21,8 @@ mongoose.connect(MONGODB_URI)
 const typeDefs = `
   type Book {
     title: String!
-    published: Int!
     author: Author!
+    published: Int!
     genres: [String!]!
     id: ID!
   }
@@ -85,24 +85,46 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() }
-      const author = { name: args.author, id: uuid() }
+    addBook: async (root, args) => {
+      console.log("addBook resolver")
+      const existingAuthor = await Author.findOne({ name: args.author });
 
-      // check if authors array doesn't have any element with the name of the author
-      if(!authors.some((element) => element.name === author.name)) {
-        authors = authors.concat(author)
+      // Use existing author or create a new author
+      let author
+      if (existingAuthor) {
+        author = existingAuthor
+      } else {
+        author = new Author({ name: args.author })
+        await author.save()
       }
-      books = books.concat(book)
+
+      // Create new book and include author object
+      const book = new Book({
+        title: args.title,
+        author: author,
+        published: args.published,
+        genres: args.genres,
+      })
+      console.log("boook:", book)
+      
+      // Save book to database
+      try {
+        await book.save()
+      } catch (error) {
+      throw new GraphQLError('Saving book failed', {
+        extensions: {
+          code: 'BAD_USER_INPUT',
+          invalidArgs: args.title,
+          error
+          }
+        })
+      }
       return book
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
-      if(author) {
-        author.born = args.setBornTo
-        return author
-      }
-      return null
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
+      author.born = args.setBornTo
+      return author.save()
     }
   }
 }

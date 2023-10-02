@@ -11,6 +11,7 @@ mutation updateAuthor($name: String!, $setBornTo: Int!) {
   }
 }
 `
+
 const Authors = (props) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')

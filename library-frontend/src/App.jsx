@@ -11,23 +11,28 @@ import { ALL_AUTHORS, ALL_BOOKS, GET_USER_INFO } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(null)
-  const [favorite, setFavorite] = useState('')
+  const [favorite, setFavorite] = useState(null)
   const [page, setPage] = useState('authors')
   const [authors, setAuthors] = useState([])
   const [books, setBooks] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
+  const [filter, setFilter] = useState(null)
 
   const userInfoQuery = useQuery(GET_USER_INFO)
   const authorsQuery = useQuery(ALL_AUTHORS)
   const booksQuery = useQuery(ALL_BOOKS)
 
   // Set books and authors
-  useEffect(() => {
+  useEffect(() => {  
     if (!authorsQuery.loading && !booksQuery.loading) {
       setAuthors(authorsQuery.data.allAuthors)
-      setBooks(booksQuery.data.allBooks)
+
+      const variables = { genre: filter }
+      booksQuery.refetch(variables).then((result) => {
+        setBooks(result.data.allBooks);
+      })
     }
-  }, [authorsQuery, booksQuery])
+  }, [authorsQuery, booksQuery, filter])
 
   // Fetch favorite genre
   useEffect(() => {
@@ -55,12 +60,12 @@ const App = () => {
 
   return (
     <div>
-      <Navigate token={token} setToken={setToken} setFavorite={setFavorite} setPage={setPage}/>
+      <Navigate token={token} setToken={setToken} setFilter={setFilter} favorite={favorite} setPage={setPage}/>
       <Notify errorMessage={errorMessage} />
       <Authors show={page === 'authors'} authors={authors} setError={notify}/>
-      <Books show={page === 'books'} books={books}/>
+      <Books show={page === 'books'} books={books} setFilter={setFilter}/>
       <NewBook show={page === 'add'} setError={notify}/>
-      <Recommend show={page === 'recommend'} favorite={favorite} books={books} />
+      <Recommend show={page === 'recommend'} books={books} />
       <LoginForm setToken={setToken} setError={notify} show={page === 'login'} setPage={setPage} />
     </div>
   )

@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 const Filters = ({setFilter}) => {
   return (
     <div>
@@ -9,13 +7,12 @@ const Filters = ({setFilter}) => {
       <button onClick={() => setFilter('design')}>design</button>
       <button onClick={() => setFilter('crime')}>crime</button>
       <button onClick={() => setFilter('classic')}>classic</button>
-      <button onClick={() => setFilter('')}>all genres</button>
+      <button onClick={() => setFilter(null)}>all genres</button>
     </div>
   )
 } 
 
 const Books = (props) => {
-  const [filter, setFilter] = useState('')
 
   if (!props.show) {
     return null
@@ -31,7 +28,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {props.books.filter((b) => filter === '' || b.genres.includes(filter)).map((b) => (
+          {props.books.map((b) => (
             <tr key={b.title}>
               <td>{b.title}</td>
               <td>{b.author.name}</td>
@@ -40,7 +37,7 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
-      <Filters setFilter={setFilter}/>
+      <Filters setFilter={props.setFilter}/>
     </div>
   )
 }

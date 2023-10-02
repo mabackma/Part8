@@ -14,7 +14,7 @@ const Recommend = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {props.books.filter((b) => props.favorite === '' || b.genres.includes(props.favorite)).map((b) => (
+          {props.books.map((b) => (
             <tr key={b.title}>
               <td>{b.title}</td>
               <td>{b.author.name}</td>

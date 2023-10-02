@@ -96,7 +96,6 @@ const resolvers = {
       if (args.genre) {
         search.genres = args.genre;
       }
-      console.log("search: ", search)
 
       return Book.find(search).populate('author')
     },

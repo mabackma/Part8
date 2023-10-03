@@ -1,10 +1,11 @@
 import { useApolloClient } from '@apollo/client'
 
-const Navigate = ({token, setToken, setFilter, favorite, setPage}) => {
+const Navigate = ({token, setToken, setFilter, favorite, setFavorite, setPage}) => {
     const client = useApolloClient()
     const logout = () => {
       setToken(null)
       setFilter(null)
+      setFavorite(null)
       localStorage.clear()
       client.resetStore()
       setPage('authors')

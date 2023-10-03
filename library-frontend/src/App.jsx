@@ -90,7 +90,7 @@ const App = () => {
     <div>
       <Navigate token={token} setToken={setToken} setFilter={setFilter} favorite={favorite} setFavorite={setFavorite} setPage={setPage}/>
       <Notify errorMessage={errorMessage} />
-      <Authors show={page === 'authors'} authors={authors} setError={notify}/>
+      <Authors show={page === 'authors'} authors={authors} token={token} setError={notify}/>
       <Books show={page === 'books'} books={books} setFilter={setFilter}/>
       <NewBook show={page === 'add'} setError={notify}/>
       <Recommend show={page === 'recommend'} books={books} />

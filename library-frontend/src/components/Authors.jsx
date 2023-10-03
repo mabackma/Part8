@@ -31,14 +31,19 @@ const Authors = (props) => {
     event.preventDefault()
     console.log('update author...')
 
-    if(props.authors.some(a => a.name === name)) {
-      // Update the server
-      updateAuthor({ variables: { name, setBornTo: Number(born) } })
+    if(props.token) {
+      if(props.authors.some(a => a.name === name)) {
+        // Update the server
+        updateAuthor({ variables: { name, setBornTo: Number(born) } })
+      }
+      else {
+        props.setError('Name not in authors')
+      }
     }
     else {
-      props.setError('Name not in authors')
+      props.setError('User not authorised')
     }
-    
+
     setName('')
     setBorn('')
   }
